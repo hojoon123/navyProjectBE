@@ -1,0 +1,17 @@
+{
+    "dev": {
+        "django_settings": "navyProjectBE.settings",
+        "exclude": [
+            "boto3",
+            "dateutil",
+            "botocore",
+            "s3transfer",
+            "concurrent"
+        ],
+        "profile_name": "default",
+        "project_name": "navyprojectbe",
+        "runtime": "python3.10",
+        "s3_bucket": "navypc-bucket",
+        "aws_region": "ap-northeast-2"
+    }
+}

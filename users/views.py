@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, viewsets
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import IsAuthenticated, BasePermission
+from rest_framework.permissions import IsAuthenticated, BasePermission, AllowAny
 from rest_framework.decorators import action
 
 from .models import LoginSession, EncryptionKey, DecryptionKey
@@ -18,6 +18,7 @@ User = get_user_model()
 
 # 회원가입
 class RegisterView(APIView):
+    permission_classes = [AllowAny] # 인증 없이 접근 가능
     @transaction.atomic  # 트랜잭션 관리
     def post(self, request):
         serializer = UserSerializer(data=request.data)
@@ -48,6 +49,7 @@ class RegisterView(APIView):
             return Response({"error": "서버 에러가 발생했습니다. 잠시 후 다시 시도해 주세요."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 # 로그인
 class LoginView(APIView):
+    permission_classes = [AllowAny]  # 인증 없이 접근 가능
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
