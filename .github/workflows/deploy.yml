@@ -39,4 +39,4 @@ jobs:
         ALLOWED_WEBHOOK_IPS: ${{ secrets.ALLOWED_WEBHOOK_IPS }}
       run: |
         source venv/bin/activate
-        zappa deploy dev
+        zappa update dev
