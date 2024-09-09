@@ -13,12 +13,6 @@
         "runtime": "python3.10",
         "s3_bucket": "navypc-bucket",
         "aws_region": "ap-northeast-2",
-        "role_name": "navyprojectbe-dev-ZappaLambdaExecutionRole",
-        "environment_variables": {
-            "AWS_ACCESS_KEY_ID": "AKIAQMEY56NL6JR5IXMH",
-            "AWS_SECRET_ACCESS_KEY": "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",
-            "AWS_REGION_NAME": "ap-northeast-2",
-            "AWS_STORAGE_BUCKET_NAME": "navypc-bucket"
-        }
+        "role_name": "navyprojectbe-dev-ZappaLambdaExecutionRole"
     }
 }
