@@ -10,7 +10,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated, BasePermission, AllowAny
 from rest_framework.decorators import action
 
-from .models import LoginSession, EncryptionKey, DecryptionKey
+from .models import LoginSession, EncryptionKey
 from .serializers import UserSerializer
 
 # 현재 프로젝트에서 사용 중인 유저 모델을 가져옵니다.
@@ -25,16 +25,6 @@ class RegisterView(APIView):
         try:
             if serializer.is_valid():
                 user = serializer.save()
-
-                # 각 파일에 대한 복호화 키 생성 및 저장
-                encryption_keys = EncryptionKey.objects.all()
-                for key in encryption_keys:
-                    decryption_key = Fernet.generate_key().decode()
-                    DecryptionKey.objects.create(
-                        user=user,
-                        file_name=key.file_name,
-                        decryption_key=decryption_key
-                    )
                 return Response({"message": "회원가입이 성공적으로 완료되었습니다."}, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except IntegrityError as e:

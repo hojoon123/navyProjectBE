@@ -9,14 +9,6 @@ class EncryptionKey(models.Model):
     def __str__(self):
         return self.file_name
 
-class DecryptionKey(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='decryption_keys')
-    file_name = models.CharField(max_length=255)
-    decryption_key = models.CharField(max_length=255)
-
-    def __str__(self):
-        return f"{self.user.username} - {self.file_name}"
-
 class CustomUser(AbstractUser):
     # 필드 추가
     username = models.CharField(max_length=150, unique=True)

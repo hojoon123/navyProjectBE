@@ -1,10 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser, LoginSession, UserProfile
-from .models import EncryptionKey, DecryptionKey
+from .models import EncryptionKey
 
 admin.site.register(EncryptionKey)
-admin.site.register(DecryptionKey)
 
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
