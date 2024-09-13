@@ -108,20 +108,16 @@ AWS_SECRET_ACCESS_KEY = env.str('AWS_SECRET_ACCESS_KEY')
 AWS_REGION_NAME = env.str('AWS_REGION_NAME', default='ap-northeast-2')
 AWS_STORAGE_BUCKET_NAME = env.str('AWS_STORAGE_BUCKET_NAME')
 
-# AWS S3 settings for static and media files
-DEFAULT_FILE_STORAGE = env.str('DEFAULT_FILE_STORAGE', default='storages.backends.s3boto3.S3Boto3Storage')
-STATICFILES_STORAGE = env.str('STATICFILES_STORAGE', default='storages.backends.s3boto3.S3Boto3Storage')
-
 # Static files (CSS, JavaScript, Images)
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 
 STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = BASE_DIR / "staticfiles"  # 필요시 로컬에서만 사용
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
 
-# Media files
-MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
-MEDIA_ROOT = BASE_DIR / "mediafiles"  # 필요시 로컬에서만 사용
+# AWS S3 settings for static and media files
+DEFAULT_FILE_STORAGE = env.str('DEFAULT_FILE_STORAGE', default='storages.backends.s3boto3.S3Boto3Storage')
+STATICFILES_STORAGE = env.str('STATICFILES_STORAGE', default='storages.backends.s3boto3.S3Boto3Storage')
+
 
 
 # Default primary key field type

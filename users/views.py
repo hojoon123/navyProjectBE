@@ -1,3 +1,5 @@
+from ipaddress import ip_address, ip_network
+
 from cryptography.fernet import Fernet
 from django.contrib.auth import authenticate, login, get_user_model
 from django.db import IntegrityError, transaction
@@ -48,18 +50,30 @@ class LoginView(APIView):
         if user is not None:
             current_ip = request.META.get('REMOTE_ADDR')
             user_agent = request.META.get('HTTP_USER_AGENT')
+            user = authenticate(request, username=username, password=password)
 
             # 기존 세션이 존재하는지 확인
-            existing_session = LoginSession.objects.filter(user=user, ip_address=current_ip).first()
+            existing_sessions = LoginSession.objects.filter(user=user)
 
-            if existing_session:
-                # 다른 기기면 차단
-                if existing_session.user_agent != user_agent:
-                    return Response({"error": "동일한 IP에서 다른 장치로 로그인이 시도되었습니다."}, status=status.HTTP_403_FORBIDDEN)
+            # IP와 User Agent 확인
+            for session in existing_sessions:
+                # 세션의 IP와 현재 IP의 앞 3 블록만 비교
+                current_network = '.'.join(current_ip.split('.')[:3])  # 현재 IP의 앞 3 블록
+                session_network = '.'.join(session.ip_address.split('.')[:3])  # 세션 IP의 앞 3 블록
 
-                # IP가 다르면 차단
-                if existing_session.ip_address != current_ip:
-                    return Response({"error": "다른 IP에서 접속이 시도되었습니다."}, status=status.HTTP_403_FORBIDDEN)
+                # 같은 네트워크에서 User Agent가 다르면 로그인 방지
+                if current_network == session_network and session.user_agent != user_agent:
+                    return Response(
+                        {"error": "동일 네트워크에서 다른 장치로 로그인이 시도되었습니다."},
+                        status=status.HTTP_403_FORBIDDEN
+                    )
+
+                # 마지막 로그인 IP와 현재 로그인 시도 IP의 앞 3 블록이 다르면 로그인 방지
+                if current_network != session_network:
+                    return Response(
+                        {"error": "로그인한 IP의 네트워크와 다릅니다. 동일한 네트워크에서만 로그인 가능합니다."},
+                        status=status.HTTP_403_FORBIDDEN
+                    )
 
             # 새로운 세션을 저장하거나 기존 세션을 업데이트
             LoginSession.objects.update_or_create(
